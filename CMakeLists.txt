@@ -1,4 +1,4 @@
-project(setting-docks VERSION 0.0.1)
+project(setting-docks VERSION 0.0.2)
 set(PROJECT_FULL_NAME "Setting Docks")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/version.h)
@@ -6,10 +6,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_SOURCE_D
 set(setting-docks_HEADERS
 	setting-docks.hpp
 	stream-dock.hpp
+	video-dock.hpp
 	version.h)
 set(setting-docks_SOURCES
 	setting-docks.cpp
-	stream-dock.cpp)
+	stream-dock.cpp
+	video-dock.cpp)
 
 if(WIN32)
 	get_filename_component(ISS_FILES_DIR "${CMAKE_BINARY_DIR}\\..\\package" ABSOLUTE)

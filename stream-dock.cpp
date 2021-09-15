@@ -24,7 +24,7 @@ static void frontend_event(enum obs_frontend_event event, void *data)
 	}
 }
 
-void frontend_save_load(obs_data_t *save_data, bool saving, void *data)
+static void frontend_save_load(obs_data_t *save_data, bool saving, void *data)
 {
 	auto streamDock = static_cast<StreamDock *>(data);
 	if (saving) {
@@ -54,6 +54,8 @@ StreamDock::StreamDock(QWidget *parent) : QDockWidget(parent)
 	serverEdit->setObjectName(QStringLiteral("server"));
 	//server->setInputMask(QStringLiteral(""));
 	serverEdit->setText(QStringLiteral(""));
+
+	serverLabel->setBuddy(serverEdit);
 
 	connect(serverEdit, &QLineEdit::textChanged, [=]() {
 		if (server == serverEdit->text())
@@ -98,6 +100,8 @@ StreamDock::StreamDock(QWidget *parent) : QDockWidget(parent)
 		obs_frontend_save_streaming_service();
 	});
 
+	keyLabel->setBuddy(keyEdit);
+
 	horizontalLayout->addWidget(keyEdit);
 
 	showButton = new QPushButton(this);
@@ -128,7 +132,7 @@ StreamDock::StreamDock(QWidget *parent) : QDockWidget(parent)
 
 	setWidget(dockWidgetContents);
 
-	QTimer *timer = new QTimer(this);
+	auto* timer = new QTimer(this);
 	connect(timer, &QTimer::timeout, this, [=]() { UpdateValues(); });
 	timer->start(1000);
 
