@@ -7,11 +7,13 @@ set(setting-docks_HEADERS
 	setting-docks.hpp
 	stream-dock.hpp
 	video-dock.hpp
+	bitrate-dock.hpp
 	version.h)
 set(setting-docks_SOURCES
 	setting-docks.cpp
 	stream-dock.cpp
-	video-dock.cpp)
+	video-dock.cpp
+	bitrate-dock.cpp)
 
 if(WIN32)
 	get_filename_component(ISS_FILES_DIR "${CMAKE_BINARY_DIR}\\..\\package" ABSOLUTE)

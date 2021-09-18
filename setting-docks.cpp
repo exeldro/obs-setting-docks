@@ -5,6 +5,7 @@
 #include "version.h"
 #include "stream-dock.hpp"
 #include "video-dock.hpp"
+#include "bitrate-dock.hpp"
 
 OBS_DECLARE_MODULE()
 OBS_MODULE_AUTHOR("Exeldro");
@@ -19,6 +20,7 @@ bool obs_module_load()
 	obs_frontend_push_ui_translation(obs_module_get_string);
 	obs_frontend_add_dock(new StreamDock(main_window));
 	obs_frontend_add_dock(new VideoDock(main_window));
+	obs_frontend_add_dock(new BitrateDock(main_window));
 	obs_frontend_pop_ui_translation();
 
 	return true;
