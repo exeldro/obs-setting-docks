@@ -55,7 +55,21 @@ BitrateDock::BitrateDock(QWidget *parent) : QDockWidget(parent)
 			return;
 		config_set_uint(config, "SimpleOutput", "VBitrate", vBitrate);
 		config_set_uint(config, "AdvOut", "FFVBitrate", vBitrate);
-		obs_frontend_save();
+
+		auto *output = obs_get_output_by_name("simple_stream");
+		if (!output)
+			output = obs_get_output_by_name("adv_stream");
+		if (!output)
+			return;
+		auto *vencoder = obs_output_get_video_encoder(output);
+		if (vencoder) {
+			auto *vencoder_settings = obs_data_create();
+			obs_data_set_int(vencoder_settings, "bitrate",
+					 vBitrate);
+			obs_encoder_update(vencoder, vencoder_settings);
+			obs_data_release(vencoder_settings);
+		}
+		obs_output_release(output);
 	});
 
 	vBitrateLabel->setBuddy(vBitrateEdit);
@@ -102,6 +116,25 @@ BitrateDock::BitrateDock(QWidget *parent) : QDockWidget(parent)
 		config_set_uint(config, "AdvOut", "Track4Bitrate", aBitrate);
 		config_set_uint(config, "AdvOut", "Track5Bitrate", aBitrate);
 		config_set_uint(config, "AdvOut", "Track6Bitrate", aBitrate);
+
+		auto *output = obs_get_output_by_name("simple_stream");
+		if (!output)
+			output = obs_get_output_by_name("adv_stream");
+		if (!output)
+			return;
+		int track = 0;
+		auto *aencoder_settings = obs_data_create();
+		obs_data_set_int(aencoder_settings, "bitrate", aBitrate);
+		for (;;) {
+			auto *aencoder = obs_output_get_audio_encoder(
+				output, track);
+			if (!aencoder)
+				break;
+			obs_encoder_update(aencoder, aencoder_settings);
+			track++;
+		}
+		obs_data_release(aencoder_settings);
+		obs_output_release(output);
 	});
 
 	aBitrateLabel->setBuddy(aBitrateEdit);
