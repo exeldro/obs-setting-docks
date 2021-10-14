@@ -31,6 +31,9 @@ BitrateDock::BitrateDock(QWidget *parent) : QDockWidget(parent)
 
 	mainLayout = new QVBoxLayout(this);
 
+	auto comboIndexChanged = static_cast<void (QComboBox::*)(int)>(
+		&QComboBox::currentIndexChanged);
+
 	auto *vBitrateLabel = new QLabel(this);
 	vBitrateLabel->setObjectName(QStringLiteral("vBitrateLabel"));
 	vBitrateLabel->setText(QT_UTF8(obs_module_text("VideoBitrate")));
@@ -44,39 +47,25 @@ BitrateDock::BitrateDock(QWidget *parent) : QDockWidget(parent)
 			      QT_UTF8(obs_module_text("High")));
 	vBitrateEdit->addItem(QStringLiteral("6000 Kbps ") +
 			      QT_UTF8(obs_module_text("VeryHigh")));
-	vBitrateEdit->addItem(QT_UTF8(obs_module_text("ShowMore")));
-	connect(vBitrateEdit, &QComboBox::currentTextChanged, [=](QString text) {
-		int index = -1;
-		if (text == QT_UTF8(obs_module_text("ShowMore")) &&
-		    (index = vBitrateEdit->findText(
-			     QT_UTF8(obs_module_text("ShowMore")))) != -1) {
+	vBitrateEdit->addItem(QStringLiteral("8000 Kbps ") +
+			      QT_UTF8(obs_module_text("SuperHigh")));
+	vBitrateEdit->addItem(QStringLiteral("12000 Kbps ") +
+			      QT_UTF8(obs_module_text("UltraHigh")));
+	vBitrateEdit->addItem(QStringLiteral("15000 Kbps ") +
+			      QT_UTF8(obs_module_text("Extreme")));
+	vBitrateEdit->addItem(QT_UTF8(obs_module_text("CustomValue")));
 
-			vBitrateEdit->removeItem(index);
-			vBitrateEdit->addItem(
-				QStringLiteral("8000 Kbps ") +
-				QT_UTF8(obs_module_text("SuperHigh")));
-			vBitrateEdit->addItem(
-				QStringLiteral("12000 Kbps ") +
-				QT_UTF8(obs_module_text("UltraHigh")));
-			vBitrateEdit->addItem(
-				QStringLiteral("15000 Kbps ") +
-				QT_UTF8(obs_module_text("Extreme")));
-			vBitrateEdit->addItem(
-				QT_UTF8(obs_module_text("CustomValue")));
-			return;
-		}
-		if (text == QT_UTF8(obs_module_text("CustomValue")) &&
-		    (index = vBitrateEdit->findText(
-			     QT_UTF8(obs_module_text("CustomValue")))) != -1) {
-			vBitrateEdit->removeItem(index);
-			vBitrateEdit->setEditable(true);
-			return;
-		}
-		index = vBitrateEdit->findText(text);
+	connect(vBitrateEdit, comboIndexChanged, [=](int index) {
 		if (index > -1 && vBitrateEdit->isEditable()) {
 			vBitrateEdit->setEditable(false);
-			vBitrateEdit->addItem(
-				QT_UTF8(obs_module_text("CustomValue")));
+		}
+	});
+	connect(vBitrateEdit, &QComboBox::currentTextChanged, [=](QString text) {
+		int index = -1;
+		if (text == QT_UTF8(obs_module_text("CustomValue"))) {
+			vBitrateEdit->setEditable(true);
+			vBitrateEdit->setCurrentText("");
+			return;
 		}
 		uint64_t bitrate = 0;
 		sscanf(QT_TO_UTF8(text), "%u", &bitrate);
@@ -154,8 +143,7 @@ BitrateDock::BitrateDock(QWidget *parent) : QDockWidget(parent)
 	aBitrateEdit->addItem(QStringLiteral("320"));
 	aBitrateEdit->addItem(QStringLiteral("352"));
 #endif
-	auto comboIndexChanged = static_cast<void (QComboBox::*)(int)>(
-		&QComboBox::currentIndexChanged);
+
 	connect(aBitrateEdit, comboIndexChanged, [=](int index) {
 		uint64_t bitrate = 0;
 		sscanf(QT_TO_UTF8(aBitrateEdit->currentText()), "%u", &bitrate);
@@ -261,45 +249,16 @@ void BitrateDock::UpdateValues()
 
 		vBitrate = videoBitrate;
 #ifdef LOUPER
-		int index = vBitrateEdit->findText(QString::number(vBitrate),
-						   Qt::MatchStartsWith);
+		int index = vBitrateEdit->findText(
+			QString::number(vBitrate) + " ", Qt::MatchStartsWith);
 		if (index != -1) {
 			vBitrateEdit->setCurrentIndex(index);
 			if (vBitrateEdit->isEditable()) {
 				vBitrateEdit->setEditable(false);
-				vBitrateEdit->addItem(QT_UTF8(
-					obs_module_text("CustomValue")));
 			}
 		} else {
-			index = vBitrateEdit->findText(
-				QT_UTF8(obs_module_text("ShowMore")));
-			if (index != -1) {
-				vBitrateEdit->removeItem(index);
-				vBitrateEdit->addItem(
-					QStringLiteral("8000 Kbps ") +
-					QT_UTF8(obs_module_text("SuperHigh")));
-				vBitrateEdit->addItem(
-					QStringLiteral("12000 Kbps ") +
-					QT_UTF8(obs_module_text("UltraHigh")));
-				vBitrateEdit->addItem(
-					QStringLiteral("15000 Kbps ") +
-					QT_UTF8(obs_module_text("Extreme")));
-				index = vBitrateEdit->findText(
-					QString::number(vBitrate),
-					Qt::MatchStartsWith);
-				if (index != -1) {
-					vBitrateEdit->setCurrentIndex(index);
-					vBitrateEdit->setEditable(false);
-					vBitrateEdit->addItem(
-						QT_UTF8(obs_module_text(
-							"CustomValue")));
-				}
-			}
-			if (index == -1) {
-				vBitrateEdit->setEditable(true);
-				vBitrateEdit->setCurrentText(
-					QString::number(vBitrate));
-			}
+			vBitrateEdit->setEditable(true);
+			vBitrateEdit->setCurrentText(QString::number(vBitrate));
 		}
 #else
 		vBitrateEdit->setValue(vBitrate);
