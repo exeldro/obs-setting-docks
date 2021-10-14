@@ -196,12 +196,13 @@ VideoDock::VideoDock(QWidget *parent) : QDockWidget(parent)
 
 	fps = new QComboBox(this);
 
-	fps->setObjectName(QStringLiteral("fps"));
+	fps->setObjectName(QStringLiteral("fpsCommon"));
 	fps->setDuplicatesEnabled(false);
 	fps->setFrame(true);
-
+#ifndef LOUPER
 	fps->addItem(QStringLiteral("10"));
 	fps->addItem(QStringLiteral("20"));
+#endif
 	fps->addItem("24 NTSC");
 	fps->addItem("25 PAL");
 	fps->addItem(QStringLiteral("29.97"));
@@ -210,7 +211,6 @@ VideoDock::VideoDock(QWidget *parent) : QDockWidget(parent)
 	fps->addItem("50 PAL");
 	fps->addItem(QStringLiteral("59.94"));
 	fps->addItem(QStringLiteral("60"));
-	fps->setObjectName(QStringLiteral("fpsCommon"));
 
 	fpsLabel->setBuddy(fps);
 
