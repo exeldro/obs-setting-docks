@@ -199,16 +199,23 @@ VideoDock::VideoDock(QWidget *parent) : QDockWidget(parent)
 	fps->setObjectName(QStringLiteral("fpsCommon"));
 	fps->setDuplicatesEnabled(false);
 	fps->setFrame(true);
-#ifndef LOUPER
+#ifdef LOUPER
+	fps->addItem(QStringLiteral("24"));
+	fps->addItem(QStringLiteral("25"));
+#else
 	fps->addItem(QStringLiteral("10"));
 	fps->addItem(QStringLiteral("20"));
-#endif
 	fps->addItem("24 NTSC");
 	fps->addItem("25 PAL");
+#endif
 	fps->addItem(QStringLiteral("29.97"));
 	fps->addItem(QStringLiteral("30"));
 	fps->addItem(QStringLiteral("48"));
+#ifdef LOUPER
+	fps->addItem(QStringLiteral("50"));
+#else
 	fps->addItem("50 PAL");
+#endif
 	fps->addItem(QStringLiteral("59.94"));
 	fps->addItem(QStringLiteral("60"));
 
