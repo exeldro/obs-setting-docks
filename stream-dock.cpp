@@ -132,7 +132,7 @@ StreamDock::StreamDock(QWidget *parent) : QDockWidget(parent)
 
 	setWidget(dockWidgetContents);
 
-	auto* timer = new QTimer(this);
+	auto *timer = new QTimer(this);
 	connect(timer, &QTimer::timeout, this, [=]() { UpdateValues(); });
 	timer->start(1000);
 

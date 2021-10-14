@@ -144,6 +144,7 @@ VideoDock::VideoDock(QWidget *parent) : QDockWidget(parent)
 		baseY = cy;
 		config_set_uint(config, "Video", "BaseCX", cx);
 		config_set_uint(config, "Video", "BaseCY", cy);
+		config_save(config);
 		obs_frontend_reset_video();
 	});
 
@@ -183,6 +184,7 @@ VideoDock::VideoDock(QWidget *parent) : QDockWidget(parent)
 		outputY = cy;
 		config_set_uint(config, "Video", "OutputCX", cx);
 		config_set_uint(config, "Video", "OutputCY", cy);
+		config_save(config);
 		obs_frontend_reset_video();
 	});
 
@@ -229,6 +231,7 @@ VideoDock::VideoDock(QWidget *parent) : QDockWidget(parent)
 		config_set_uint(config, "Video", "FPSType", 0); //FPSCommon
 		config_set_string(config, "Video", "FPSCommon",
 				  QT_TO_UTF8(fps->currentText()));
+		config_save(config);
 		obs_frontend_reset_video();
 	});
 

@@ -47,8 +47,7 @@ BitrateDock::BitrateDock(QWidget *parent) : QDockWidget(parent)
 	vBitrateEdit->addItem(QT_UTF8(obs_module_text("ShowMore")));
 	connect(vBitrateEdit, &QComboBox::currentTextChanged, [=](QString text) {
 		int index = -1;
-		if (text ==
-			    QT_UTF8(obs_module_text("ShowMore")) &&
+		if (text == QT_UTF8(obs_module_text("ShowMore")) &&
 		    (index = vBitrateEdit->findText(
 			     QT_UTF8(obs_module_text("ShowMore")))) != -1) {
 
@@ -104,6 +103,7 @@ BitrateDock::BitrateDock(QWidget *parent) : QDockWidget(parent)
 			return;
 		config_set_uint(config, "SimpleOutput", "VBitrate", vBitrate);
 		config_set_uint(config, "AdvOut", "FFVBitrate", vBitrate);
+		config_save(config);
 
 		auto *output = obs_get_output_by_name("simple_stream");
 		if (!output)
@@ -173,7 +173,7 @@ BitrateDock::BitrateDock(QWidget *parent) : QDockWidget(parent)
 		config_set_uint(config, "AdvOut", "Track4Bitrate", aBitrate);
 		config_set_uint(config, "AdvOut", "Track5Bitrate", aBitrate);
 		config_set_uint(config, "AdvOut", "Track6Bitrate", aBitrate);
-
+		config_save(config);
 		auto *output = obs_get_output_by_name("simple_stream");
 		if (!output)
 			output = obs_get_output_by_name("adv_stream");
