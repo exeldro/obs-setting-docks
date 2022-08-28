@@ -29,6 +29,7 @@ static void frontend_event(enum obs_frontend_event event, void *data)
 
 static void frontend_save_load(obs_data_t *save_data, bool saving, void *data)
 {
+	UNUSED_PARAMETER(save_data);
 	auto videoDock = static_cast<VideoDock *>(data);
 	if (saving) {
 
@@ -131,6 +132,7 @@ VideoDock::VideoDock(QWidget *parent) : QDockWidget(parent)
 	auto comboIndexChanged = static_cast<void (QComboBox::*)(int)>(
 		&QComboBox::currentIndexChanged);
 	connect(baseResolution, comboIndexChanged, [=](int index) {
+		UNUSED_PARAMETER(index);
 		uint32_t cx = 0, cy = 0;
 		if (!ConvertResText(QT_TO_UTF8(baseResolution->currentText()),
 				    cx, cy))
@@ -171,6 +173,7 @@ VideoDock::VideoDock(QWidget *parent) : QDockWidget(parent)
 	mainLayout->addWidget(outputResolution);
 
 	connect(outputResolution, comboIndexChanged, [=](int index) {
+		UNUSED_PARAMETER(index);
 		uint32_t cx = 0, cy = 0;
 		if (!ConvertResText(QT_TO_UTF8(outputResolution->currentText()),
 				    cx, cy))
@@ -224,6 +227,7 @@ VideoDock::VideoDock(QWidget *parent) : QDockWidget(parent)
 	mainLayout->addWidget(fps);
 
 	connect(fps, comboIndexChanged, [=](int index) {
+		UNUSED_PARAMETER(index);
 		double fpss = 0.0;
 		sscanf(QT_TO_UTF8(fps->currentText()), "%lf", &fpss);
 		if (fpss < 1.0)

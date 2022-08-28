@@ -26,6 +26,7 @@ static void frontend_event(enum obs_frontend_event event, void *data)
 
 static void frontend_save_load(obs_data_t *save_data, bool saving, void *data)
 {
+	UNUSED_PARAMETER(save_data);
 	auto streamDock = static_cast<StreamDock *>(data);
 	if (saving) {
 

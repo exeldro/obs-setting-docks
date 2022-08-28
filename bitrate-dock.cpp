@@ -13,6 +13,7 @@
 
 static void frontend_save_load(obs_data_t *save_data, bool saving, void *data)
 {
+	UNUSED_PARAMETER(save_data);
 	auto bitrateDock = static_cast<BitrateDock *>(data);
 	if (saving) {
 
@@ -83,7 +84,7 @@ BitrateDock::BitrateDock(QWidget *parent) : QDockWidget(parent)
 	auto sbValueChanged =
 		static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged);
 	connect(vBitrateEdit, sbValueChanged, [=](int value) {
-		if (value == vBitrate)
+		if (value == (int)vBitrate)
 			return;
 		vBitrate = value;
 #endif
@@ -145,9 +146,10 @@ BitrateDock::BitrateDock(QWidget *parent) : QDockWidget(parent)
 #endif
 
 	connect(aBitrateEdit, comboIndexChanged, [=](int index) {
-		uint64_t bitrate = 0;
+		UNUSED_PARAMETER(index);
+		unsigned int bitrate = 0;
 		sscanf(QT_TO_UTF8(aBitrateEdit->currentText()), "%u", &bitrate);
-		if (bitrate == 0 || aBitrate == bitrate)
+		if (bitrate == 0 || (unsigned int)aBitrate == bitrate)
 			return;
 		aBitrate = bitrate;
 		auto *config = obs_frontend_get_profile_config();
