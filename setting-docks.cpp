@@ -22,7 +22,7 @@ bool obs_module_load()
 	obs_frontend_add_dock(new VideoDock(main_window));
 	obs_frontend_add_dock(new BitrateDock(main_window));
 	obs_frontend_pop_ui_translation();
-
+	
 	return true;
 }
 
